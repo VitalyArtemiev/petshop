@@ -1,38 +1,22 @@
 package mirea.petshop.service
 
-import mirea.petshop.model.*
+import mirea.petshop.model.Good
+import mirea.petshop.model.GoodDAO
+import mirea.petshop.model.GoodWrapper
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class StoreService {
-    /*constructor() {
-        Database.connect()
-
-        transaction {
-
-        }
-    }*/
+class StoreService @Autowired constructor(val goodDAO: GoodDAO) {
 
     val logger = LoggerFactory.getLogger("StoreLogger")
 
-
-    val petDAO = PetDAO()
-    val itemDAO = ItemDAO()
-
-    fun getPet(ID: Int): Pet? {
-        return petDAO.get(ID)
+    fun getGood(ID: Int): Good? {
+        return goodDAO.get(ID)
     }
 
-    fun getAllPets(): Array<PetWrapper> {
-        return petDAO.getAll().toTypedArray()
-    }
-
-    fun getItem(ID: Int): Item? {
-        return itemDAO.get(ID)
-    }
-
-    fun getAllItems(): Array<ItemWrapper> {
-        return itemDAO.getAll().toTypedArray()
+    fun getAllGoods(): Array<GoodWrapper> {
+        return goodDAO.getAll().toTypedArray()
     }
 }

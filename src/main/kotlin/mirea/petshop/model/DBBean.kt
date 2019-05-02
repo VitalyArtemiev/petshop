@@ -32,10 +32,7 @@ class Appconfig: InitializingBean {
 
     @Bean
     fun InitDB(): Database {
-        //val url = environment.getProperty("datasource.url")
         val driver = "org.postgresql.Driver" //environment.getProperty("datasource.url")
-        /*val user = environment.getProperty("datasource.user")
-        val password = environment.getProperty("datasource.password")*/
 
         return Database.connect(url, driver, user, password)
     }

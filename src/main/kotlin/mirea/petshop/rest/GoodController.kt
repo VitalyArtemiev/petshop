@@ -1,7 +1,7 @@
 package mirea.petshop.rest
 
-import mirea.petshop.model.Pet
-import mirea.petshop.model.PetWrapper
+import mirea.petshop.model.Good
+import mirea.petshop.model.GoodWrapper
 import mirea.petshop.service.StoreService
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.*
 import java.util.concurrent.atomic.AtomicLong
 
 @RestController
-@RequestMapping("pets")
-class PetController @Autowired constructor(val shopService: StoreService) {
-    @RequestMapping("")
-    fun getAll(): ResponseEntity<Array<PetWrapper>> {
+@RequestMapping("goods")
+class GoodController @Autowired constructor(val shopService: StoreService) {
+    @GetMapping("")
+    fun getAll(): ResponseEntity<Array<GoodWrapper>> {
         return transaction{
-            ResponseEntity(shopService.getAllPets(), HttpStatus.OK)
+            ResponseEntity(shopService.getAllGoods(), HttpStatus.OK)
         }
     }
 
-    @RequestMapping("/{petID}")
-    fun getByID(@PathVariable("petID") petID: Int): ResponseEntity<Pet> {
+    @GetMapping("/{goodID}")
+    fun getByID(@PathVariable("goodID") goodID: Int): ResponseEntity<Good> {
         return transaction {
-            val pet = shopService.getPet(petID)
+            val good = shopService.getGood(goodID)
 
-            if (pet == null) {
+            if (good == null) {
                 ResponseEntity(HttpStatus.NOT_FOUND)
             }
             else{
-                ResponseEntity (pet, HttpStatus.OK)
+                ResponseEntity(good, HttpStatus.OK)
             }
         }
     }
@@ -42,7 +42,7 @@ data class Greeting(val id: Long, val content: String)
 class HelloController {
     val counter = AtomicLong()
 
-    @GetMapping("/greeting")
+    @GetMapping("/greeting", "")
     fun greeting(@RequestParam(value = "nameColumn", defaultValue = "World") name: String) =
             Greeting(counter.incrementAndGet(), "Hello, $name")
 }
