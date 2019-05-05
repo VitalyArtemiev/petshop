@@ -52,19 +52,6 @@ class UserDAO : DAO<User, UserWrapper> {
     override fun getAll(): List<UserWrapper> {
         return UserWrapper.all().toList()
     }
-
-    override fun save(t: User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun update(t: User, params: Array<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun delete(t: User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 }
 
 object Users : IntIdTable("users") {
@@ -102,4 +89,4 @@ class UserWrapper(id: EntityID<Int>) : IntEntity(id) {
     var role by Users.roleColumn
 }
 
-//TODO: (cart , token expiration , microservices)
+//TODO: (microservices, assoc goods)

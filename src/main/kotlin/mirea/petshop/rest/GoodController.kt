@@ -7,23 +7,24 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.atomic.AtomicLong
 
 @RestController
 @RequestMapping("goods")
-class GoodController @Autowired constructor(val shopService: StoreService) {
+class GoodController @Autowired constructor(val storeService: StoreService) {
     @GetMapping("")
     fun getAll(): ResponseEntity<Array<GoodWrapper>> {
         return transaction{
-            ResponseEntity(shopService.getAllGoods(), HttpStatus.OK)
+            ResponseEntity(storeService.getAllGoods(), HttpStatus.OK)
         }
     }
 
     @GetMapping("/{goodID}")
     fun getByID(@PathVariable("goodID") goodID: Int): ResponseEntity<Good> {
         return transaction {
-            val good = shopService.getGood(goodID)
+            val good = storeService.getGood(goodID)
 
             if (good == null) {
                 ResponseEntity(HttpStatus.NOT_FOUND)
@@ -32,6 +33,18 @@ class GoodController @Autowired constructor(val shopService: StoreService) {
                 ResponseEntity(good, HttpStatus.OK)
             }
         }
+    }
+
+    @PutMapping("/{goodID}")
+    @PreAuthorize("@authService.hasRole({'Staff'}, #token)")
+    fun addStock(@PathVariable("goodID") goodID: Int, @RequestParam amount: Int,
+                 @RequestHeader("auth") token: Token): ResponseEntity<Good> {
+
+        if (storeService.updateGood(goodID, amount)) {
+            return ResponseEntity(HttpStatus.OK)
+        } else
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+
     }
 }
 
